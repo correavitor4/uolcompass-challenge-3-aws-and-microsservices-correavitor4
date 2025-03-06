@@ -1,0 +1,70 @@
+package compassoulspring2024pb.challenge1.eventservice.service.implementation;
+
+import compassoulspring2024pb.challenge1.eventservice.exception.api.APIInternalServerErrorException;
+import compassoulspring2024pb.challenge1.eventservice.exception.api.EntityNotFoundException;
+import compassoulspring2024pb.challenge1.eventservice.model.Event;
+import compassoulspring2024pb.challenge1.eventservice.repository.EventRepository;
+import compassoulspring2024pb.challenge1.eventservice.service.EventService;
+import compassoulspring2024pb.challenge1.eventservice.web.dto.CreateEventDTO;
+import compassoulspring2024pb.challenge1.eventservice.web.dto.UpdateEventDTO;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class EventServiceImplementation implements EventService {
+
+    private final EventRepository eventRepository;
+
+    @Override
+    public Event create(CreateEventDTO dto) {
+        try {
+            Event eventToSave = dto.toModel();
+            return eventRepository.save(eventToSave);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new APIInternalServerErrorException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Event update(UpdateEventDTO event, UUID id) throws EntityNotFoundException {
+        try {
+            Event savedEvent = findById(id);
+
+            savedEvent.setName(event.getName());
+            savedEvent.setCep(event.getCep());
+            savedEvent.setAddress(event.getAddress());
+            savedEvent.setCity(event.getCity());
+            savedEvent.setDistrict(event.getDistrict());
+
+            return eventRepository.save(savedEvent);
+
+        } catch (EntityNotFoundException e) {
+            String sb = "Event with id " + id + " not found" +
+                    e.getMessage() +
+                    Arrays.toString(e.getStackTrace());
+            log.error(sb);
+
+            throw new EntityNotFoundException("Event with id " + id + " not found");
+        }
+    }
+
+    @Override
+    public Event findById(UUID id) throws EntityNotFoundException {
+        return eventRepository.findActiveById(id).orElseThrow(
+                () -> new EntityNotFoundException("Event not found")
+        );
+    }
+
+    @Override
+    public List<Event> findAll() {
+        return eventRepository.findAllActive();
+    }
+}
