@@ -5,8 +5,8 @@ import compassoulspring2024pb.challenge1.eventservice.exception.api.EntityNotFou
 import compassoulspring2024pb.challenge1.eventservice.model.Event;
 import compassoulspring2024pb.challenge1.eventservice.repository.EventRepository;
 import compassoulspring2024pb.challenge1.eventservice.service.EventService;
-import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.CreateEventDTO;
-import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.UpdateEventDTO;
+import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.CreateEventRequestDTO;
+import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.UpdateEventRequestDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -25,7 +25,7 @@ public class EventServiceImplementation implements EventService {
     private final EventRepository eventRepository;
 
     @Override
-    public Event create(CreateEventDTO dto) {
+    public Event create(CreateEventRequestDTO dto) {
         try {
             Event eventToSave = dto.toModel();
             return eventRepository.save(eventToSave);
@@ -36,7 +36,7 @@ public class EventServiceImplementation implements EventService {
     }
 
     @Override
-    public Event update(UpdateEventDTO event, UUID id) throws EntityNotFoundException {
+    public Event update(UpdateEventRequestDTO event, UUID id) throws EntityNotFoundException {
         try {
             Event savedEvent = findById(id);
 

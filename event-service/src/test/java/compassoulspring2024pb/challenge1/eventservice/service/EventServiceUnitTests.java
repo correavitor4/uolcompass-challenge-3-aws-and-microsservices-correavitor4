@@ -5,8 +5,8 @@ import compassoulspring2024pb.challenge1.eventservice.model.Event;
 import compassoulspring2024pb.challenge1.eventservice.model.enums.StatesEnum;
 import compassoulspring2024pb.challenge1.eventservice.repository.EventRepository;
 import compassoulspring2024pb.challenge1.eventservice.service.implementation.EventServiceImplementation;
-import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.CreateEventDTO;
-import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.UpdateEventDTO;
+import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.CreateEventRequestDTO;
+import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.UpdateEventRequestDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -37,7 +36,7 @@ public class EventServiceUnitTests {
 
     @Test
     public void create_withValidEvent_shouldReturnEvent() {
-        CreateEventDTO event = new CreateEventDTO("event1",
+        CreateEventRequestDTO event = new CreateEventRequestDTO("event1",
                 "cep1",
                 "address1",
                 "city1",
@@ -58,41 +57,41 @@ public class EventServiceUnitTests {
 
     @Test
     public void update_withValidData_shouldReturnEvent() {
-        UpdateEventDTO updateEventDTO = new UpdateEventDTO("event1",
+        UpdateEventRequestDTO updateEventInternalDTO = new UpdateEventRequestDTO("event1",
                 "cep1",
                 "address1",
                 "city1",
                 "district1",
                 StatesEnum.SP);
-        Event event = updateEventDTO.toModel();
+        Event event = updateEventInternalDTO.toModel();
 
         when(eventRepository.findActiveById(event.getId())).thenReturn(Optional.of(event));
         when(eventRepository.save(any(Event.class))).thenReturn(event);
 
-        Event result = eventService.update(updateEventDTO, event.getId());
+        Event result = eventService.update(updateEventInternalDTO, event.getId());
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(updateEventDTO.getName(), result.getName());
-        Assertions.assertEquals(updateEventDTO.getCep(), result.getCep());
-        Assertions.assertEquals(updateEventDTO.getAddress(), result.getAddress());
-        Assertions.assertEquals(updateEventDTO.getCity(), result.getCity());
-        Assertions.assertEquals(updateEventDTO.getDistrict(), result.getDistrict());
-        Assertions.assertEquals(updateEventDTO.getState(), result.getState());
+        Assertions.assertEquals(updateEventInternalDTO.getName(), result.getName());
+        Assertions.assertEquals(updateEventInternalDTO.getCep(), result.getCep());
+        Assertions.assertEquals(updateEventInternalDTO.getAddress(), result.getAddress());
+        Assertions.assertEquals(updateEventInternalDTO.getCity(), result.getCity());
+        Assertions.assertEquals(updateEventInternalDTO.getDistrict(), result.getDistrict());
+        Assertions.assertEquals(updateEventInternalDTO.getState(), result.getState());
     }
 
     @Test
     public void update_withInvalidId_shouldThrowEntityNotFoundException() {
-        UpdateEventDTO updateEventDTO = new UpdateEventDTO("event1",
+        UpdateEventRequestDTO updateEventInternalDTO = new UpdateEventRequestDTO("event1",
                 "cep1",
                 "address1",
                 "city1",
                 "district1",
                 StatesEnum.SP);
-        Event event = updateEventDTO.toModel();
+        Event event = updateEventInternalDTO.toModel();
 
         when(eventRepository.findActiveById(event.getId())).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(EntityNotFoundException.class, () -> eventService.update(updateEventDTO, event.getId()));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> eventService.update(updateEventInternalDTO, event.getId()));
     }
 
     @Test

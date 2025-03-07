@@ -2,8 +2,9 @@ package compassoulspring2024pb.challenge1.eventservice.web.api.v1.controller;
 
 import compassoulspring2024pb.challenge1.eventservice.model.Event;
 import compassoulspring2024pb.challenge1.eventservice.service.EventService;
-import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.CreateEventDTO;
-import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.EventDTO;
+import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.CreateEventRequestDTO;
+import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.EventResponseDTO;
+import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.UpdateEventRequestDTO;
 import compassoulspring2024pb.challenge1.eventservice.web.api.v1.utils.URIUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController("/api/v1/events")
@@ -23,27 +23,34 @@ public class EventController {
     private final EventService eventService;
 
     @PostMapping("/create")
-    public ResponseEntity<EventDTO> createEvent(@RequestBody @Valid CreateEventDTO dto) {
+    public ResponseEntity<EventResponseDTO> createEvent(@RequestBody @Valid CreateEventRequestDTO dto) {
         Event event = eventService.create(dto);
 
         return ResponseEntity
                 .created(URIUtils.generateResourceURI(event.getId()))
-                .body(EventDTO.fromModel(event));
+                .body(EventResponseDTO.fromModel(event));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EventDTO> findById(@PathVariable UUID id) {
+    public ResponseEntity<EventResponseDTO> findById(@PathVariable UUID id) {
         Event event = eventService.findById(id);
 
-        return ResponseEntity.ok(EventDTO.fromModel(event));
+        return ResponseEntity.ok(EventResponseDTO.fromModel(event));
     }
 
     @GetMapping
-    public ResponseEntity<Page<EventDTO>> findAll(Pageable pageable) {
+    public ResponseEntity<Page<EventResponseDTO>> findAll(Pageable pageable) {
         Page<Event> events = eventService.findAll(pageable);
 
-        Page<EventDTO> responseList = events.map(EventDTO::fromModel);
+        Page<EventResponseDTO> responseList = events.map(EventResponseDTO::fromModel);
 
         return ResponseEntity.ok(responseList);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<EventResponseDTO> updateEvent(@PathVariable UUID id, @RequestBody @Valid UpdateEventRequestDTO dto) {
+        Event event = eventService.update(dto, id);
+
+        return ResponseEntity.ok(EventResponseDTO.fromModel(event));
     }
 }

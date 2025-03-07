@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class UpdateEventDTO {
+public class UpdateEventRequestDTO {
     @NotBlank(message = "name cannot be blank")
     private String name;
 
