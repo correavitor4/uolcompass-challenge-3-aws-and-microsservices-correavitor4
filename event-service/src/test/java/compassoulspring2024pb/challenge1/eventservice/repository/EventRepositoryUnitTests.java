@@ -2,7 +2,6 @@ package compassoulspring2024pb.challenge1.eventservice.repository;
 
 import compassoulspring2024pb.challenge1.eventservice.model.Event;
 import compassoulspring2024pb.challenge1.eventservice.model.enums.StatesEnum;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class EventRepositoryUnitTests
@@ -43,13 +44,13 @@ public class EventRepositoryUnitTests
 
         Event savedEvent = eventRepository.findActiveById(savedEventId).orElse(null);
 
-        Assertions.assertNotNull(savedEvent);
-        Assertions.assertEquals(event.getName(), savedEvent.getName());
-        Assertions.assertEquals(event.getCep(), savedEvent.getCep());
-        Assertions.assertEquals(event.getAddress(), savedEvent.getAddress());
-        Assertions.assertEquals(event.getCity(), savedEvent.getCity());
-        Assertions.assertEquals(event.getDistrict(), savedEvent.getDistrict());
-        Assertions.assertEquals(event.getState(), savedEvent.getState());
+        assertNotNull(savedEvent);
+        assertEquals(event.getName(), savedEvent.getName());
+        assertEquals(event.getCep(), savedEvent.getCep());
+        assertEquals(event.getAddress(), savedEvent.getAddress());
+        assertEquals(event.getCity(), savedEvent.getCity());
+        assertEquals(event.getDistrict(), savedEvent.getDistrict());
+        assertEquals(event.getState(), savedEvent.getState());
     }
 
     @Test
@@ -67,20 +68,20 @@ public class EventRepositoryUnitTests
 
         Event foundEvent = eventRepository.findActiveById(savedEventId).orElse(null);
 
-        Assertions.assertNotNull(foundEvent);
-        Assertions.assertEquals(event.getName(), foundEvent.getName());
-        Assertions.assertEquals(event.getCep(), foundEvent.getCep());
-        Assertions.assertEquals(event.getAddress(), foundEvent.getAddress());
-        Assertions.assertEquals(event.getCity(), foundEvent.getCity());
-        Assertions.assertEquals(event.getDistrict(), foundEvent.getDistrict());
-        Assertions.assertEquals(event.getState(), foundEvent.getState());
+        assertNotNull(foundEvent);
+        assertEquals(event.getName(), foundEvent.getName());
+        assertEquals(event.getCep(), foundEvent.getCep());
+        assertEquals(event.getAddress(), foundEvent.getAddress());
+        assertEquals(event.getCity(), foundEvent.getCity());
+        assertEquals(event.getDistrict(), foundEvent.getDistrict());
+        assertEquals(event.getState(), foundEvent.getState());
     }
 
     @Test
     public void findById_withInvalidId_shouldReturnNull(){
         UUID invalidId = UUID.randomUUID();
         Event foundEvent = eventRepository.findActiveById(invalidId).orElse(null);
-        Assertions.assertNull(foundEvent);
+        assertNull(foundEvent);
     }
 
     @Test
@@ -100,7 +101,7 @@ public class EventRepositoryUnitTests
 
         Event foundEvent = eventRepository.findActiveById(savedEventId).orElse(null);
 
-        Assertions.assertNull(foundEvent);
+        assertNull(foundEvent);
     }
 
     @Test
@@ -139,10 +140,10 @@ public class EventRepositoryUnitTests
 
         List<Event> activeEvents = eventRepository.findAllActive();
 
-        Assertions.assertEquals(2, activeEvents.size());
-        Assertions.assertTrue(activeEvents.containsAll(List.of(event1, event2)));
-        Assertions.assertFalse(activeEvents.contains(event3));
+        assertEquals(2, activeEvents.size());
+        assertTrue(activeEvents.containsAll(List.of(event1, event2)));
+        assertFalse(activeEvents.contains(event3));
 
-        Assertions.assertEquals(3, eventRepository.count());
+        assertEquals(3, eventRepository.count());
     }
 }
