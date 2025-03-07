@@ -1,4 +1,4 @@
-package compassoulspring2024pb.challenge1.eventservice.web.dto;
+package compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto;
 
 import compassoulspring2024pb.challenge1.eventservice.model.Event;
 import compassoulspring2024pb.challenge1.eventservice.model.enums.StatesEnum;
@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class UpdateEventDTO {
+public class UpdateEventRequestDTO {
     @NotBlank(message = "name cannot be blank")
     private String name;
 
