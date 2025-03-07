@@ -1,11 +1,12 @@
 package compassoulspring2024pb.challenge1.eventservice.service;
 
-import compassoulspring2024pb.challenge1.eventservice.exception.api.EntityNotFoundException;
+import compassoulspring2024pb.challenge1.eventservice.exception.EntityNotFoundException;
 import compassoulspring2024pb.challenge1.eventservice.model.Event;
 import compassoulspring2024pb.challenge1.eventservice.model.enums.StatesEnum;
 import compassoulspring2024pb.challenge1.eventservice.repository.EventRepository;
+import compassoulspring2024pb.challenge1.eventservice.service.definition.EventService;
 import compassoulspring2024pb.challenge1.eventservice.service.implementation.EventServiceImplementation;
-import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.CreateEventRequestDTO;
+import compassoulspring2024pb.challenge1.eventservice.service.dto.CreateEventInternalDTO;
 import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.UpdateEventRequestDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +18,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -36,8 +40,10 @@ public class EventServiceUnitTests {
 
     @Test
     public void create_withValidEvent_shouldReturnEvent() {
-        CreateEventRequestDTO event = new CreateEventRequestDTO("event1",
+        CreateEventInternalDTO event = new CreateEventInternalDTO("event1",
                 "cep1",
+                Instant.now().plus(1, ChronoUnit.DAYS),
+                Instant.now().plus(2, ChronoUnit.DAYS),
                 "address1",
                 "city1",
                 "district1",
@@ -134,6 +140,28 @@ public class EventServiceUnitTests {
 
     @Test
     public void findAll_withEvents_shouldReturnAllEvents() {
+        List<Event> mockedListToReturn = getEvents();
+        Page<Event> mockedPageToReturn = new PageImpl<>(mockedListToReturn);
+
+        when(eventRepository.findAllActive(any(Pageable.class))).thenReturn(mockedPageToReturn);
+
+        Page<Event> result = eventService.findAll(Pageable.ofSize(10));
+
+        Assertions.assertEquals(mockedListToReturn.size(), result.getContent().size());
+
+        result.forEach(event -> {
+            Assertions.assertTrue(mockedPageToReturn.getContent().contains(event));
+            Assertions.assertNotNull(event.getId());
+            Assertions.assertNotNull(event.getName());
+            Assertions.assertNotNull(event.getCep());
+            Assertions.assertNotNull(event.getAddress());
+            Assertions.assertNotNull(event.getCity());
+            Assertions.assertNotNull(event.getDistrict());
+            Assertions.assertNotNull(event.getState());
+        });
+    }
+
+    private static List<Event> getEvents() {
         Event event1 = new Event(
             "Test Event 1",
             "75000-000",
@@ -161,24 +189,6 @@ public class EventServiceUnitTests {
             StatesEnum.AC
         );
 
-        List<Event> mockedListToReturn = List.of(event1,event2,event3);
-        Page<Event> mockedPageToReturn = new PageImpl<>(mockedListToReturn);
-
-        when(eventRepository.findAllActive(any(Pageable.class))).thenReturn(mockedPageToReturn);
-
-        Page<Event> result = eventService.findAll(Pageable.ofSize(10));
-
-        Assertions.assertEquals(mockedListToReturn.size(), result.getContent().size());
-
-        result.forEach(event -> {
-            Assertions.assertTrue(mockedPageToReturn.getContent().contains(event));
-            Assertions.assertNotNull(event.getId());
-            Assertions.assertNotNull(event.getName());
-            Assertions.assertNotNull(event.getCep());
-            Assertions.assertNotNull(event.getAddress());
-            Assertions.assertNotNull(event.getCity());
-            Assertions.assertNotNull(event.getDistrict());
-            Assertions.assertNotNull(event.getState());
-        });
+        return List.of(event1,event2,event3);
     }
 }

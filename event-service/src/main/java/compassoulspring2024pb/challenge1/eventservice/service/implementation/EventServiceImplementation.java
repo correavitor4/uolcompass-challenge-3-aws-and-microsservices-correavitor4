@@ -1,11 +1,11 @@
 package compassoulspring2024pb.challenge1.eventservice.service.implementation;
 
-import compassoulspring2024pb.challenge1.eventservice.exception.api.APIInternalServerErrorException;
-import compassoulspring2024pb.challenge1.eventservice.exception.api.EntityNotFoundException;
+import compassoulspring2024pb.challenge1.eventservice.exception.APIInternalServerErrorException;
+import compassoulspring2024pb.challenge1.eventservice.exception.EntityNotFoundException;
 import compassoulspring2024pb.challenge1.eventservice.model.Event;
 import compassoulspring2024pb.challenge1.eventservice.repository.EventRepository;
-import compassoulspring2024pb.challenge1.eventservice.service.EventService;
-import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.CreateEventRequestDTO;
+import compassoulspring2024pb.challenge1.eventservice.service.definition.EventService;
+import compassoulspring2024pb.challenge1.eventservice.service.dto.CreateEventInternalDTO;
 import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.UpdateEventRequestDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +25,9 @@ public class EventServiceImplementation implements EventService {
     private final EventRepository eventRepository;
 
     @Override
-    public Event create(CreateEventRequestDTO dto) {
+    public Event create(CreateEventInternalDTO dto) {
         try {
+
             Event eventToSave = dto.toModel();
             return eventRepository.save(eventToSave);
         } catch (Exception e) {

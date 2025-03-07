@@ -1,8 +1,11 @@
 package compassoulspring2024pb.challenge1.eventservice.web.api.v1.controller;
 
+import compassoulspring2024pb.challenge1.eventservice.integration.viacep.dto.ViaCepResponseDTO;
 import compassoulspring2024pb.challenge1.eventservice.model.Event;
-import compassoulspring2024pb.challenge1.eventservice.service.EventService;
-import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.CreateEventRequestDTO;
+import compassoulspring2024pb.challenge1.eventservice.service.definition.AddressService;
+import compassoulspring2024pb.challenge1.eventservice.service.definition.EventService;
+import compassoulspring2024pb.challenge1.eventservice.service.dto.CreateEventInternalDTO;
+import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.CreateEventDTO;
 import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.EventResponseDTO;
 import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.UpdateEventRequestDTO;
 import compassoulspring2024pb.challenge1.eventservice.web.api.v1.utils.URIUtils;
@@ -20,11 +23,16 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class EventController {
 
+    private final AddressService addressService;
     private final EventService eventService;
 
     @PostMapping("/create")
-    public ResponseEntity<EventResponseDTO> createEvent(@RequestBody @Valid CreateEventRequestDTO dto) {
-        Event event = eventService.create(dto);
+    public ResponseEntity<EventResponseDTO> createEvent(@RequestBody @Valid CreateEventDTO createEventDTO) {
+        ViaCepResponseDTO address = addressService.findByCep(createEventDTO.getCep());
+
+        CreateEventInternalDTO internalDTO = new CreateEventInternalDTO(createEventDTO, address);
+
+        Event event = eventService.create(internalDTO);
 
         return ResponseEntity
                 .created(URIUtils.generateResourceURI(event.getId()))
