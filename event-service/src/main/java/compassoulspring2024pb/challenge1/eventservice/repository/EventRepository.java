@@ -1,10 +1,11 @@
 package compassoulspring2024pb.challenge1.eventservice.repository;
 
 import compassoulspring2024pb.challenge1.eventservice.model.Event;
+import org.springframework.data.domain.Page;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -13,5 +14,5 @@ public interface EventRepository extends MongoRepository<Event, UUID> {
     Optional<Event> findActiveById(UUID id);
 
     @Query("{'deletedAt': null}")
-    List<Event> findAllActive();
+    Page<Event> findAllActive(Pageable pageable);
 }

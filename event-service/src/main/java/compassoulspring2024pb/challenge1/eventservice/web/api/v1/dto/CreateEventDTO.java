@@ -1,4 +1,4 @@
-package compassoulspring2024pb.challenge1.eventservice.web.dto;
+package compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto;
 
 import compassoulspring2024pb.challenge1.eventservice.model.Event;
 import compassoulspring2024pb.challenge1.eventservice.model.enums.StatesEnum;

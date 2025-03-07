@@ -5,8 +5,8 @@ import compassoulspring2024pb.challenge1.eventservice.model.Event;
 import compassoulspring2024pb.challenge1.eventservice.model.enums.StatesEnum;
 import compassoulspring2024pb.challenge1.eventservice.repository.EventRepository;
 import compassoulspring2024pb.challenge1.eventservice.service.implementation.EventServiceImplementation;
-import compassoulspring2024pb.challenge1.eventservice.web.dto.CreateEventDTO;
-import compassoulspring2024pb.challenge1.eventservice.web.dto.UpdateEventDTO;
+import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.CreateEventDTO;
+import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.UpdateEventDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -124,9 +128,9 @@ public class EventServiceUnitTests {
 
     @Test
     public void findAll_withNoEvents_shouldReturnEmptyList() {
-        when(eventRepository.findAllActive()).thenReturn(new ArrayList<>());
+        when(eventRepository.findAllActive(any(Pageable.class))).thenReturn(Page.empty());
 
-        Assertions.assertEquals(0, eventService.findAll().size());
+        Assertions.assertEquals(0, eventService.findAll(Pageable.ofSize(10)).getContent().size());
     }
 
     @Test
@@ -158,15 +162,17 @@ public class EventServiceUnitTests {
             StatesEnum.AC
         );
 
-        List<Event> expectedEvents = Arrays.asList(event1, event2, event3);
-        when(eventRepository.findAllActive()).thenReturn(expectedEvents);
+        List<Event> mockedListToReturn = List.of(event1,event2,event3);
+        Page<Event> mockedPageToReturn = new PageImpl<>(mockedListToReturn);
 
-        List<Event> result = eventService.findAll();
+        when(eventRepository.findAllActive(any(Pageable.class))).thenReturn(mockedPageToReturn);
 
-        Assertions.assertEquals(expectedEvents.size(), result.size());
+        Page<Event> result = eventService.findAll(Pageable.ofSize(10));
+
+        Assertions.assertEquals(mockedListToReturn.size(), result.getContent().size());
 
         result.forEach(event -> {
-            Assertions.assertTrue(expectedEvents.contains(event));
+            Assertions.assertTrue(mockedPageToReturn.getContent().contains(event));
             Assertions.assertNotNull(event.getId());
             Assertions.assertNotNull(event.getName());
             Assertions.assertNotNull(event.getCep());

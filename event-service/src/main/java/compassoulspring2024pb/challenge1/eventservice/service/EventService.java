@@ -1,10 +1,12 @@
 package compassoulspring2024pb.challenge1.eventservice.service;
 
 import compassoulspring2024pb.challenge1.eventservice.model.Event;
-import compassoulspring2024pb.challenge1.eventservice.web.dto.CreateEventDTO;
-import compassoulspring2024pb.challenge1.eventservice.web.dto.UpdateEventDTO;
+import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.CreateEventDTO;
+import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.UpdateEventDTO;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.UUID;
 
 public interface EventService {
@@ -13,5 +15,5 @@ public interface EventService {
     Event update(UpdateEventDTO event, UUID id);
 
     Event findById(UUID id);
-    List<Event> findAll();
+    Page<Event> findAll(Pageable pageable);
 }
