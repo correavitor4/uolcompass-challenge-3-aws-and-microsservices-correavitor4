@@ -1,6 +1,6 @@
 package compassoulspring2024pb.challenge1.eventservice.service.event;
 
-import compassoulspring2024pb.challenge1.eventservice.exception.EntityNotFoundException;
+import compassoulspring2024pb.challenge1.eventservice.exception.api.EntityNotFoundException;
 import compassoulspring2024pb.challenge1.eventservice.model.Event;
 import compassoulspring2024pb.challenge1.eventservice.model.enums.StatesEnum;
 import compassoulspring2024pb.challenge1.eventservice.repository.EventRepository;
@@ -69,7 +69,15 @@ public class EventServiceUnitTests {
                 "city1",
                 "district1",
                 StatesEnum.SP);
-        Event event = updateEventInternalDTO.toModel();
+        Event event = new Event(
+                updateEventInternalDTO.getName(),
+                updateEventInternalDTO.getCep(),
+                Instant.now(),
+                Instant.now().plus(1, ChronoUnit.DAYS),
+                updateEventInternalDTO.getAddress(),
+                updateEventInternalDTO.getCity(),
+                updateEventInternalDTO.getDistrict(),
+                updateEventInternalDTO.getState());
 
         when(eventRepository.findActiveById(event.getId())).thenReturn(Optional.of(event));
         when(eventRepository.save(any(Event.class))).thenReturn(event);
@@ -93,7 +101,16 @@ public class EventServiceUnitTests {
                 "city1",
                 "district1",
                 StatesEnum.SP);
-        Event event = updateEventInternalDTO.toModel();
+        Event event = new Event(
+                updateEventInternalDTO.getName(),
+                updateEventInternalDTO.getCep(),
+                Instant.now(),
+                Instant.now().plus(1, ChronoUnit.DAYS),
+                updateEventInternalDTO.getAddress(),
+                updateEventInternalDTO.getCity(),
+                updateEventInternalDTO.getDistrict(),
+                updateEventInternalDTO.getState()
+        );
 
         when(eventRepository.findActiveById(event.getId())).thenReturn(Optional.empty());
 
@@ -105,6 +122,8 @@ public class EventServiceUnitTests {
         Event event = new Event(
                 "Test Event",
                 "75000-000",
+                Instant.now(),
+                Instant.now().plus(1, ChronoUnit.DAYS),
                 "Test Address",
                 "Test City",
                 "Test District",
@@ -163,32 +182,38 @@ public class EventServiceUnitTests {
 
     private static List<Event> getEvents() {
         Event event1 = new Event(
-            "Test Event 1",
-            "75000-000",
-            "Test Address 1",
-            "Test City 1",
-            "Test District 1",
-            StatesEnum.AC
+                "Test Event 1",
+                "75000-000",
+                Instant.now(),
+                Instant.now().plus(1, ChronoUnit.DAYS),
+                "Test Address 1",
+                "Test City 1",
+                "Test District 1",
+                StatesEnum.AC
         );
 
         Event event2 = new Event(
-            "Test Event 2",
-            "75000-000",
-            "Test Address 2",
-            "Test City 2",
-            "Test District 2",
-            StatesEnum.AC
+                "Test Event 2",
+                "75000-000",
+                Instant.now(),
+                Instant.now().plus(1, ChronoUnit.DAYS),
+                "Test Address 2",
+                "Test City 2",
+                "Test District 2",
+                StatesEnum.AC
         );
 
         Event event3 = new Event(
-            "Test Event 3",
-            "75000-000",
-            "Test Address 3",
-            "Test City 3",
-            "Test District 3",
-            StatesEnum.AC
+                "Test Event 3",
+                "75000-000",
+                Instant.now(),
+                Instant.now().plus(1, ChronoUnit.DAYS),
+                "Test Address 3",
+                "Test City 3",
+                "Test District 3",
+                StatesEnum.AC
         );
 
-        return List.of(event1,event2,event3);
+        return List.of(event1, event2, event3);
     }
 }

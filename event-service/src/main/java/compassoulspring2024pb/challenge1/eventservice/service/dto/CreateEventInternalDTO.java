@@ -3,7 +3,6 @@ package compassoulspring2024pb.challenge1.eventservice.service.dto;
 import compassoulspring2024pb.challenge1.eventservice.integration.viacep.dto.ViaCepResponseDTO;
 import compassoulspring2024pb.challenge1.eventservice.model.Event;
 import compassoulspring2024pb.challenge1.eventservice.model.enums.StatesEnum;
-import compassoulspring2024pb.challenge1.eventservice.validation.EndTimeAfterStartTime;
 import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.CreateEventDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -18,7 +17,7 @@ public class CreateEventInternalDTO {
     @NotBlank(message = "name cannot be blank")
     private String name;
 
-    @Pattern(regexp = "^\\d{5}-\\d{3}$\n", message = "cep must be in the format 00000-000")
+    @Pattern(regexp = "^\\d{5}-\\d{3}$", message = "cep must be in the format 00000-000")
     private String cep;
 
     @NotNull
@@ -27,7 +26,6 @@ public class CreateEventInternalDTO {
 
     @NotNull
     @Future
-    @EndTimeAfterStartTime
     private Instant endTime;
 
     @NotBlank(message = "address cannot be blank")
@@ -43,10 +41,10 @@ public class CreateEventInternalDTO {
     private StatesEnum state;
 
     public Event toModel() {
-        return new Event(name, cep, address, city, district, state);
+        return new Event(name, cep, startTime, endTime, address, city, district, state);
     }
 
-    public CreateEventInternalDTO(@Valid CreateEventDTO dto, @Valid ViaCepResponseDTO address){
+    public CreateEventInternalDTO(@Valid CreateEventDTO dto, @Valid ViaCepResponseDTO address) {
         this.name = dto.getName();
         this.cep = dto.getCep();
         this.startTime = dto.getStartTime();

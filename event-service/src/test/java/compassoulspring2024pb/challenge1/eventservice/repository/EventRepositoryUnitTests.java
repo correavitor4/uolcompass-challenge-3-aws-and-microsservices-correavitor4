@@ -11,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 
 import org.springframework.data.domain.Pageable;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,6 +40,8 @@ public class EventRepositoryUnitTests {
         Event event = new Event(
                 "Test Event",
                 "75000-000",
+                Instant.now(),
+                Instant.now().plus(1, ChronoUnit.DAYS),
                 "Test Address",
                 "Test City",
                 "Test District",
@@ -62,6 +66,8 @@ public class EventRepositoryUnitTests {
         Event event = new Event(
                 "Test Event",
                 "75000-000",
+                Instant.now(),
+                Instant.now().plus(1, ChronoUnit.DAYS),
                 "Test Address",
                 "Test City",
                 "Test District",
@@ -93,6 +99,8 @@ public class EventRepositoryUnitTests {
         Event event = new Event(
                 "Test Event",
                 "75000-000",
+                Instant.now(),
+                Instant.now().plus(1, ChronoUnit.DAYS),
                 "Test Address",
                 "Test City",
                 "Test District",
@@ -113,6 +121,8 @@ public class EventRepositoryUnitTests {
         Event event1 = new Event(
                 "Test Event 1",
                 "75000-000",
+                Instant.now(),
+                Instant.now().plus(1, ChronoUnit.DAYS),
                 "Test Address 1",
                 "Test City 1",
                 "Test District 1",
@@ -122,6 +132,8 @@ public class EventRepositoryUnitTests {
         Event event2 = new Event(
                 "Test Event 2",
                 "75000-000",
+                Instant.now(),
+                Instant.now().plus(1, ChronoUnit.DAYS),
                 "Test Address 2",
                 "Test City 2",
                 "Test District 2",
@@ -131,6 +143,8 @@ public class EventRepositoryUnitTests {
         Event event3 = new Event(
                 "Test Event 3",
                 "75000-000",
+                Instant.now(),
+                Instant.now().plus(1, ChronoUnit.DAYS),
                 "Test Address 3",
                 "Test City 3",
                 "Test District 3",

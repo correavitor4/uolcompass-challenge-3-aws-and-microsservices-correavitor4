@@ -20,6 +20,8 @@ public class Event {
     private String address;
     private String city;
     private String district;
+    private Instant startTime;
+    private Instant endTime;
 
     private Instant deletedAt;
 
@@ -27,12 +29,16 @@ public class Event {
 
     public Event(String name,
                  String cep,
+                 Instant startTime,
+                 Instant endTime,
                  String address,
                  String city,
                  String district,
                  StatesEnum state) {
         this.name = name;
         this.cep = cep;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.address = address;
         this.city = city;
         this.district = district;
