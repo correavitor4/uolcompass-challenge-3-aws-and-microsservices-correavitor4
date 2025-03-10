@@ -1,4 +1,4 @@
-package compassoulspring2024pb.challenge1.eventservice.service;
+package compassoulspring2024pb.challenge1.eventservice.service.event;
 
 import compassoulspring2024pb.challenge1.eventservice.exception.EntityNotFoundException;
 import compassoulspring2024pb.challenge1.eventservice.model.Event;
