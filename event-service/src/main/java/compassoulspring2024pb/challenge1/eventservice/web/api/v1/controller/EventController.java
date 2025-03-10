@@ -19,7 +19,8 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.UUID;
 
-@RestController("/api/v1/events")
+@RestController
+@RequestMapping("/api/v1/events")
 @RequiredArgsConstructor
 public class EventController {
 

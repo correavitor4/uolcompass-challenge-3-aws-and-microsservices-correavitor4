@@ -1,6 +1,7 @@
 package compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto;
 
 import compassoulspring2024pb.challenge1.eventservice.model.Event;
+import compassoulspring2024pb.challenge1.eventservice.model.enums.StatesEnum;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +18,7 @@ public class EventResponseDTO {
     private String address;
     private String city;
     private String district;
+    private StatesEnum state;
 
     public static EventResponseDTO fromModel(Event event) {
         EventResponseDTO eventResponseDTO = new EventResponseDTO();
@@ -27,6 +29,8 @@ public class EventResponseDTO {
         eventResponseDTO.setAddress(event.getAddress());
         eventResponseDTO.setCity(event.getCity());
         eventResponseDTO.setDistrict(event.getDistrict());
+        eventResponseDTO.setState(event.getState());
+
         return eventResponseDTO;
     }
 }

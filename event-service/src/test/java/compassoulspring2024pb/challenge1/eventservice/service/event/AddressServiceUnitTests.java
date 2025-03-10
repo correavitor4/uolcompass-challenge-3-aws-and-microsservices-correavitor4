@@ -1,6 +1,6 @@
 package compassoulspring2024pb.challenge1.eventservice.service.event;
 
-import compassoulspring2024pb.challenge1.eventservice.exception.APIInternalServerErrorException;
+import compassoulspring2024pb.challenge1.eventservice.exception.api.APIInternalServerErrorException;
 import compassoulspring2024pb.challenge1.eventservice.exception.via_cep_api.ViaCepAPICepNotFoundException;
 import compassoulspring2024pb.challenge1.eventservice.exception.via_cep_api.ViaCepApiUnavailableException;
 import compassoulspring2024pb.challenge1.eventservice.integration.viacep.ViaCepClient;

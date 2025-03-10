@@ -1,7 +1,7 @@
 package compassoulspring2024pb.challenge1.eventservice.service.implementation;
 
-import compassoulspring2024pb.challenge1.eventservice.exception.APIInternalServerErrorException;
-import compassoulspring2024pb.challenge1.eventservice.exception.EntityNotFoundException;
+import compassoulspring2024pb.challenge1.eventservice.exception.api.APIInternalServerErrorException;
+import compassoulspring2024pb.challenge1.eventservice.exception.api.EntityNotFoundException;
 import compassoulspring2024pb.challenge1.eventservice.model.Event;
 import compassoulspring2024pb.challenge1.eventservice.repository.EventRepository;
 import compassoulspring2024pb.challenge1.eventservice.service.definition.EventService;
