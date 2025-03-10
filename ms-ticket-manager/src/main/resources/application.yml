@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: ticket-manager
+  data:
+    mongodb:
+      uri: mongodb://admin:admin@localhost:27017/db_ticket?authSource=admin
