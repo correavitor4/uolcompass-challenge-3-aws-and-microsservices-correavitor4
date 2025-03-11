@@ -3,10 +3,10 @@ FROM eclipse-temurin:17-jdk AS build
 WORKDIR /app
 
 # Copia os arquivos do projeto
-COPY mvnw .
-COPY .mvn .mvn
-COPY pom.xml .
-COPY src src
+COPY event-service/mvnw .
+COPY event-service/.mvn .mvn
+COPY event-service/pom.xml .
+COPY event-service/src src
 
 # Concede permissão de execução ao Maven Wrapper
 RUN chmod +x mvnw
