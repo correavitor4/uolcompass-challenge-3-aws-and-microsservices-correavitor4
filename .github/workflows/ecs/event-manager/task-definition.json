@@ -3,7 +3,7 @@
     "containerDefinitions": [
         {
             "name": "ms-event-manager-container",
-            "image": "537124940612.dkr.ecr.sa-east-1.amazonaws.com/challenge3-ms-event-manager:latest",
+            "image": "correavitor4/challenge-3-aws-ms-event-manager:latest",
             "cpu": 1024,
             "memory": 2048,
             "memoryReservation": 1024,
