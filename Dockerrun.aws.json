@@ -1,0 +1,55 @@
+{
+  "AWSEBDockerrunVersion": "2",
+  "containerDefinitions": [
+    {
+      "name": "event-service",
+      "image": "challenge-3-event-service",
+      "essential": true,
+      "memory": 512,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "hostPort": 8081
+        }
+      ],
+      "environment": [
+        {
+          "name": "SPRING_PROFILES_ACTIVE",
+          "value": "prod"
+        }
+      ]
+    },
+    {
+      "name": "mongodb",
+      "image": "mongo:latest",
+      "essential": true,
+      "memory": 512,
+      "portMappings": [
+        {
+          "containerPort": 27017,
+          "hostPort": 27017
+        }
+      ],
+      "environment": [
+        {
+          "name": "MONGO_INITDB_ROOT_USERNAME",
+          "value": "admin"
+        },
+        {
+          "name": "MONGO_INITDB_ROOT_PASSWORD",
+          "value": "admin"
+        }
+      ],
+      "volumes": [
+        {
+          "host": {
+            "sourcePath": "/home/vitor-pc/IdeaProjects/challenge-3/mongo_data"
+          },
+          "container": {
+            "mountPath": "/data/db"
+          }
+        }
+      ]
+    }
+  ]
+}
