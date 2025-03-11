@@ -1,5 +1,13 @@
 {
-  "AWSEBDockerrunVersion": "2",
+  "AWSEBDockerrunVersion": "3",
+  "volumes": [
+    {
+      "name": "mongo_data",
+      "host": {
+        "sourcePath": "/home/vitor-pc/IdeaProjects/challenge-3/mongo_data"
+      }
+    }
+  ],
   "containerDefinitions": [
     {
       "name": "event-service",
@@ -40,14 +48,10 @@
           "value": "admin"
         }
       ],
-      "volumes": [
+      "mountPoints": [
         {
-          "host": {
-            "sourcePath": "/home/vitor-pc/IdeaProjects/challenge-3/mongo_data"
-          },
-          "container": {
-            "mountPath": "/data/db"
-          }
+          "sourceVolume": "mongo_data",
+          "containerPath": "/data/db"
         }
       ]
     }
