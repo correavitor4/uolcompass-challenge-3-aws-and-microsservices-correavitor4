@@ -91,6 +91,5 @@
     },
     "registeredAt": "2025-03-11T13:13:47.190Z",
     "registeredBy": "arn:aws:sts::537124940612:assumed-role/AWSReservedSSO_AdministratorAccess_d4ad781dd8603173/joao.correa.pb@compasso.com.br",
-    "enableFaultInjection": false,
     "tags": []
 }
