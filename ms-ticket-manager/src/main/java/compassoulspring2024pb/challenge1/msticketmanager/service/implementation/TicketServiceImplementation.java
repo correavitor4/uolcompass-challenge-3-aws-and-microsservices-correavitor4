@@ -1,7 +1,7 @@
 package compassoulspring2024pb.challenge1.msticketmanager.service.implementation;
 
 import compassoulspring2024pb.challenge1.msticketmanager.exception.EntityNotFoundException;
-import compassoulspring2024pb.challenge1.msticketmanager.exception.InexistentEventIdProvidedException;
+import compassoulspring2024pb.challenge1.msticketmanager.exception.NonExistentEventIdProvidedException;
 import compassoulspring2024pb.challenge1.msticketmanager.model.Ticket;
 import compassoulspring2024pb.challenge1.msticketmanager.model.enums.TicketStatusEnum;
 import compassoulspring2024pb.challenge1.msticketmanager.repository.TicketRepository;
@@ -28,7 +28,7 @@ public class TicketServiceImplementation implements TicketService {
     @Override
     public Ticket createTicket(CreateTicketRequestDTO dto) {
         if (!eventService.existsById(dto.getEventId()))
-            throw new InexistentEventIdProvidedException("Invalid event id provided", dto.getEventId());
+            throw new NonExistentEventIdProvidedException("Event with id " + dto.getEventId() + " not found");
 
         ModelMapper modelMapper = new ModelMapper();
 
