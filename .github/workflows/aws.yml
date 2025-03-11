@@ -8,7 +8,6 @@ env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
   ECS_SERVICE: ${{ secrets.ECS_EVENT_MANAGER_SERVICE_NAME }}
   ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}
-  ECS_TASK_DEFINITION: ${{ secrets.EVENT_MANAGER_TASK_DEFINITION_NAME }}
   CONTAINER_NAME: ${{ secrets.EVENT_MANAGER_TASK_DEFINITION_CONTAINER_NAME }}
   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   DOCKERHUB_REPO: ${{ secrets.DOCKERHUB_REPO }}
@@ -56,7 +55,7 @@ jobs:
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
-        task-definition: ${{ steps.task-def.outputs.task-definition }}
+        task-definition: ./ecs/event-manager/task-definition.json
         service: ${{ env.ECS_SERVICE }}
         cluster: ${{ env.ECS_CLUSTER }}
         wait-for-service-stability: true
