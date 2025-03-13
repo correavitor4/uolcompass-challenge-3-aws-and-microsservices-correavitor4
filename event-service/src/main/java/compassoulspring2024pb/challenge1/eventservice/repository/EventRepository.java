@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface EventRepository extends MongoRepository<Event, UUID> {
-    @Query("{'deletedAt': null}")
+    @Query("{'deletedAt': null, '_id': ?0}")
     Optional<Event> findActiveById(UUID id);
 
     @Query("{'deletedAt': null}")

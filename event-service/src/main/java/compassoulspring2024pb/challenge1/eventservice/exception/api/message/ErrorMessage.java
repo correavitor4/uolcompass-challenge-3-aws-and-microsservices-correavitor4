@@ -43,6 +43,7 @@ public class ErrorMessage {
 
     private void addErrors(BindingResult result) {
         this.errors = new HashMap<>();
-        result.getFieldErrors().forEach(error -> this.errors.put(error.getField(), error.getDefaultMessage()));
+        var fieldErrors = result.getFieldErrors();
+        fieldErrors.forEach(error -> this.errors.put(error.getField(), error.getDefaultMessage()));
     }
 }
