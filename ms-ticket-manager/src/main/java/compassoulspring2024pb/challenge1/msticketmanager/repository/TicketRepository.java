@@ -11,10 +11,10 @@ import java.util.UUID;
 
 public interface TicketRepository extends MongoRepository<Ticket, UUID>
 {
-    @Query("{'cancelledAt': null}")
+    @Query("{'cancelledAt': null, 'id': ?0}")
     Optional<Ticket> findActiveById(UUID id);
 
-    @Query("{'cancelledAt': null}")
+    @Query("{'cancelledAt': null ,'cpf': ?0}")
     Optional<Ticket> findActiveByCpf(String cpf);
 
     @Query("{'cancelledAt': null}")
