@@ -6,7 +6,7 @@ spring:
       uri: mongodb://admin:admin@localhost:27017/test_db_ticket?authSource=admin
 
 event-manager:
-  url: http://localhost:8080
+  url: http://localhost:8081
 
 server:
   port: 8081
