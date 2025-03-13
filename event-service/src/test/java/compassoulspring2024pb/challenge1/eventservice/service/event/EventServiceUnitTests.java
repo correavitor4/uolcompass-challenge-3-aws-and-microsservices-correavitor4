@@ -5,6 +5,7 @@ import compassoulspring2024pb.challenge1.eventservice.model.Event;
 import compassoulspring2024pb.challenge1.eventservice.model.enums.StatesEnum;
 import compassoulspring2024pb.challenge1.eventservice.repository.EventRepository;
 import compassoulspring2024pb.challenge1.eventservice.service.definition.EventService;
+import compassoulspring2024pb.challenge1.eventservice.service.definition.TicketService;
 import compassoulspring2024pb.challenge1.eventservice.service.implementation.EventServiceImplementation;
 import compassoulspring2024pb.challenge1.eventservice.service.dto.CreateEventInternalDTO;
 import compassoulspring2024pb.challenge1.eventservice.web.api.v1.dto.UpdateEventRequestDTO;
@@ -31,11 +32,14 @@ public class EventServiceUnitTests {
     @Mock
     private EventRepository eventRepository;
 
+    @Mock
+    private TicketService ticketService;
+
     private EventService eventService;
 
     @BeforeEach
     public void setup() {
-        eventService = new EventServiceImplementation(eventRepository);
+        eventService = new EventServiceImplementation(eventRepository, ticketService);
     }
 
     @Test
