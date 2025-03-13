@@ -1,7 +1,8 @@
-package compassoulspring2024pb.challenge1.msticketmanager.repository;
+package compassoulspring2024pb.challenge1.msticketmanager.tests.repository;
 
 import compassoulspring2024pb.challenge1.msticketmanager.model.Ticket;
 import compassoulspring2024pb.challenge1.msticketmanager.model.enums.TicketStatusEnum;
+import compassoulspring2024pb.challenge1.msticketmanager.repository.TicketRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
