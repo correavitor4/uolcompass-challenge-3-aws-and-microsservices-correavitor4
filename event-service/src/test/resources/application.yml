@@ -2,3 +2,6 @@ spring:
   data:
     mongodb:
       uri: mongodb://admin:admin@localhost:27017/test_db_event?authSource=admin
+
+ticket-manager:
+  url: http://localhost:8081

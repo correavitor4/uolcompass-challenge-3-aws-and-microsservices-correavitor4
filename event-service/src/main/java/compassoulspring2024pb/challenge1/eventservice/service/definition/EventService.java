@@ -16,4 +16,6 @@ public interface EventService {
 
     Event findById(UUID id);
     Page<Event> findAll(Pageable pageable);
+
+    void delete(UUID id);
 }
