@@ -1,4 +1,4 @@
-package compassoulspring2024pb.challenge1.msticketmanager.service;
+package compassoulspring2024pb.challenge1.msticketmanager.tests.service;
 
 import compassoulspring2024pb.challenge1.msticketmanager.exception.EntityNotFoundException;
 import compassoulspring2024pb.challenge1.msticketmanager.exception.NonExistentEventIdProvidedException;

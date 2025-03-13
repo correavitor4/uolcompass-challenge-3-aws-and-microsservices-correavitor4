@@ -1,5 +1,6 @@
 package compassoulspring2024pb.challenge1.msticketmanager.web.api.v1.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -26,6 +27,7 @@ public class CreateTicketRequestDTO {
     private String customerName;
 
     @NotBlank
+    @Email
     private String customerEmail;
 
     @NotNull
