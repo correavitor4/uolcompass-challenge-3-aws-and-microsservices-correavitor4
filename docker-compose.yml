@@ -11,6 +11,17 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=prod
 
+
+  ms-ticket-manager:
+    build:
+      context: ./
+      dockerfile: ms-ticket-manager/Dockerfile
+    container_name: challenge-3-ms-ticket-manager
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+
   mongodb:
     image: mongo:latest
     container_name: challenge-3-mongo-db-production

@@ -28,6 +28,24 @@
       ]
     },
     {
+      "name": "ms-ticket-manager",
+      "image": "challenge-3-ms-ticket-manager",
+      "essential": true,
+      "memory": 512,
+      "portMappings": [
+        {
+          "containerPort": 8081,
+          "hostPort": 8081
+        }
+      ],
+      "environment": [
+        {
+          "name": "SPRING_PROFILES_ACTIVE",
+          "value": "prod"
+        }
+      ]
+    },
+    {
       "name": "mongodb",
       "image": "mongo:latest",
       "essential": true,
