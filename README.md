@@ -48,7 +48,7 @@ Agora você já está apto a rodar os testes. Existem duas maneiras.
 
 ### 1 Rodando pelo Intellij
 Basta clicar com botão direito nessa pasta "java": <br>
-![img.png](img.png). <br>
+![img.png](readme-midia/img.png). <br>
 Em seguida, clique em Run Tests Java
 Faça o mesmo para o serviço de ms-ticker-manager.
 
@@ -56,7 +56,7 @@ Faça o mesmo para o serviço de ms-ticker-manager.
 1. Testes do Event Manager Service: ```./event-service/mvnw -f event-service/pom.xml test```
 2. Testes do Ticket Manager Service: ```./ms-ticket-manager/mvnw -f ms-ticket-manager/pom.xml test```
 Os resultados serão mais ou menos esses:
-![img_1.png](img_1.png)
+![img_1.png](readme-midia/img_1.png)
 
 
 ## Sobre o Deploy
@@ -76,4 +76,4 @@ Agora, basta acessar o link da instância EC2 e tudo estar pronto!
 ### Tentativas fracassadas de deploy
 Como citei anteriormente, eu tentei fazer o deploy com o Github Actions em uma ECS e usando o ECR para salvar as imagens.
 Sendo assim, é possível ver que existem vários pipelines que falharam: <br>
-![img_2.png](img_2.png)<br>
+![img_2.png](readme-midia/img_2.png)<br>
