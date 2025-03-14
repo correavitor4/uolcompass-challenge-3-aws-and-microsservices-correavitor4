@@ -3,24 +3,28 @@ version: "3.8"
 services:
   event-service:
     build:
-      context: ./
+      context: .
       dockerfile: event-service/Dockerfile
     container_name: challenge-3-event-service
     ports:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      - mongodb
 
 
   ms-ticket-manager:
     build:
-      context: ./
+      context: .
       dockerfile: ms-ticket-manager/Dockerfile
     container_name: challenge-3-ms-ticket-manager
     ports:
       - "8081:8081"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      - mongodb
 
   mongodb:
     image: mongo:latest
