@@ -1,6 +1,5 @@
 package compassoulspring2024pb.challenge1.msticketmanager.web.api.v1.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import compassoulspring2024pb.challenge1.msticketmanager.model.enums.TicketStatusEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
