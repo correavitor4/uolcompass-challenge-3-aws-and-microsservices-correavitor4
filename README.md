@@ -72,3 +72,9 @@ Essa instância EC2 está rodando 3 containers:
 
 Agora, basta acessar o link da instância EC2 e tudo estar pronto!
 
+
+## ⚠️Avisos
+### Tentativas fracassadas de deploy
+Como citei anteriormente, eu tentei fazer o deploy com o Github Actions em uma ECS e usando o ECR para salvar as imagens.
+Sendo assim, é possível ver que existem vários pipelines que falharam: <br>
+![img_2.png](img_2.png)<br>
