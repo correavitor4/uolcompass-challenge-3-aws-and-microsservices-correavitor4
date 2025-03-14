@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -68,5 +70,16 @@ public class AddressServiceUnitTests {
     public void findByCep_withValidCPFAndAndErrorThatsIsNotFeignException_shouldThrowException() {
         when(viaCepClient.findByCep(any(String.class))).thenThrow(RuntimeException.class);
         assertThrows(APIInternalServerErrorException.class, () -> mockAddressService().findByCep("65049-232"));
+    }
+
+    @Test
+    public void findByCep_withACepThatReturnNotValidAddressFromViaCepApi_shouldThrowException() {
+        ViaCepResponseDTO address = ViaCepResponseDTO
+                .builder()
+                .build();
+        ResponseEntity<ViaCepResponseDTO> response = new ResponseEntity<>(address, HttpStatus.OK);
+        when(viaCepClient.findByCep(any(String.class))).thenReturn(response);
+
+        assertThrows(ViaCepAPICepNotFoundException.class, () -> mockAddressService().findByCep("65049-232"));
     }
 }

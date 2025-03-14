@@ -3,6 +3,7 @@ package compassoulspring2024pb.challenge1.eventservice.exception.api.handler;
 import compassoulspring2024pb.challenge1.eventservice.exception.api.EntityNotFoundException;
 import compassoulspring2024pb.challenge1.eventservice.exception.api.EventDeletionException;
 import compassoulspring2024pb.challenge1.eventservice.exception.api.message.ErrorMessage;
+import compassoulspring2024pb.challenge1.eventservice.exception.via_cep_api.ViaCepAPICepNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -47,6 +48,19 @@ public class APIExceptionHandler {
         printAPIError(exception.getMessage());
 
         HttpStatus ht = HttpStatus.CONFLICT;
+
+        return ResponseEntity
+                .status(ht)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, ht, exception.getMessage()));
+    }
+
+    @ExceptionHandler(ViaCepAPICepNotFoundException.class)
+    public ResponseEntity<ErrorMessage> handleViaCepAPICepNotFoundException(ViaCepAPICepNotFoundException exception,
+                                                                      HttpServletRequest request) {
+        printAPIError(exception.getMessage());
+
+        HttpStatus ht = HttpStatus.NOT_FOUND;
 
         return ResponseEntity
                 .status(ht)

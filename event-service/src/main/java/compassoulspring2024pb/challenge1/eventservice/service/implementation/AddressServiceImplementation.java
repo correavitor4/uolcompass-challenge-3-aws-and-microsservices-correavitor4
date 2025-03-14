@@ -12,6 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringJoiner;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -28,6 +32,17 @@ public class AddressServiceImplementation implements AddressService {
         try {
 
             ResponseEntity<ViaCepResponseDTO> response = viaCepClient.findByCep(cep);
+
+            ViaCepResponseDTO address = response.getBody();
+
+            if (!getAddressErrors(address).isEmpty()) {
+                StringJoiner joiner = new StringJoiner("\n");
+                for (String s : getAddressErrors(address)) {
+                    joiner.add(s);
+                }
+                throw new ViaCepAPICepNotFoundException(
+                        joiner.toString());
+            }
 
             return response.getBody();
         } catch (FeignException e) {
@@ -46,10 +61,42 @@ public class AddressServiceImplementation implements AddressService {
 
             log.error(e.getMessage());
             throw new APIInternalServerErrorException(e.getMessage());
-        }
-        catch (RuntimeException e) {
+        } catch (ViaCepAPICepNotFoundException e) {
+            log.error(e.getMessage());
+            throw new ViaCepAPICepNotFoundException(e.getMessage());
+        } catch (RuntimeException e) {
             log.error(e.getMessage());
             throw new APIInternalServerErrorException(e.getMessage());
         }
+    }
+
+    private List<String> getAddressErrors(ViaCepResponseDTO address) {
+        List<String> errors = new ArrayList<>();
+
+        if (address == null) {
+            errors.add("Address not found");
+        }
+
+        if (address.getUf() == null) {
+            errors.add("The provided cep results in an invalid UF");
+        }
+
+        if (address.getLogradouro() == null) {
+            errors.add("The provided cep results in an invalid logradouro");
+        }
+
+        if (address.getLocalidade() == null) {
+            errors.add("The provided cep results in an invalid localidade");
+        }
+
+        if (address.getBairro() == null) {
+            errors.add("The provided cep results in an invalid bairro");
+        }
+
+        if (address.getCep() == null) {
+            errors.add("The provided cep results in an invalid cep");
+        }
+
+        return errors;
     }
 }
