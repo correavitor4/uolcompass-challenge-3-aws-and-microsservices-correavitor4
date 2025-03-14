@@ -51,13 +51,13 @@ public class TicketServiceImplementation implements TicketService {
     }
 
     @Override
-    public Ticket deleteTicket(UUID id) {
+    public void deleteTicket(UUID id) {
         Ticket ticket = findById(id);
 
         ticket.setCancelledAt(Instant.now());
         ticket.setStatus(TicketStatusEnum.CANCELLED);
 
-        return ticketRepository.save(ticket);
+        ticketRepository.save(ticket);
     }
 
     @Override
