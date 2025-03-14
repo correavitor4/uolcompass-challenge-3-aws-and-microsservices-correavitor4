@@ -282,6 +282,32 @@ public class TicketControllerIntegrationTests {
         Assertions.assertEquals(20, response.getBody().get("size"));
     }
 
+    @Test
+    public void existsByEventId_withValidEventId_shouldReturnTrue() {
+        UUID eventId = UUID.randomUUID();
+
+        List<Ticket> ticketList = getTicketListByEventId(eventId);
+
+        ticketRepository.saveAll(ticketList);
+
+        String url = "http://localhost:" + port + "/api/v1/tickets/existsByEventId/" + eventId;
+        ResponseEntity<Boolean> response = restTemplate.getForEntity(url, Boolean.class);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertNotNull(response.getBody());
+        Assertions.assertTrue(response.getBody());
+    }
+
+    @Test
+    public void existsByEventId_withNonExistentEventId_shouldReturnFalse() {
+        UUID eventId = UUID.randomUUID();
+
+        String url = "http://localhost:" + port + "/api/v1/tickets/existsByEventId/" + eventId;
+        ResponseEntity<Boolean> response = restTemplate.getForEntity(url, Boolean.class);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertNotNull(response.getBody());
+        Assertions.assertFalse(response.getBody());
+    }
+
     private List<CreateTicketRequestDTO> getCreateTicketRequestDTOs() {
         return List.of(
                 new CreateTicketRequestDTO(null, null, null, null, null),
@@ -302,6 +328,20 @@ public class TicketControllerIntegrationTests {
                         .customerName("John Doe")
                         .customerEmail("4k4lG@example.com")
                         .eventId(UUID.randomUUID())
+                        .totalAmountBRL(BigDecimal.valueOf(100))
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+     private List<Ticket> getTicketListByEventId(UUID eventId) {
+        return Stream.iterate(0, i -> i + 1)
+                .limit(10)
+                .map(i -> Ticket.builder()
+                        .id(UUID.randomUUID())
+                        .cpf("293.666.570-10")
+                        .customerName("John Doe")
+                        .customerEmail("4k4lG@example.com")
+                        .eventId(eventId)
                         .totalAmountBRL(BigDecimal.valueOf(100))
                         .build())
                 .collect(Collectors.toList());

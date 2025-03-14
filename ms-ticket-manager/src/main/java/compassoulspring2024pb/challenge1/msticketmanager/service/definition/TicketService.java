@@ -11,7 +11,9 @@ public interface TicketService {
         Ticket createTicket(CreateTicketRequestDTO dto) ;
         Ticket findById(UUID id) ;
         Ticket findByCpf(String cpf) ;
-        Ticket deleteTicket(UUID id) ;
+        void deleteTicket(UUID id) ;
 
         Page<Ticket> findAll(Pageable pageable);
+
+        Boolean existsByEventId(UUID eventId);
 }

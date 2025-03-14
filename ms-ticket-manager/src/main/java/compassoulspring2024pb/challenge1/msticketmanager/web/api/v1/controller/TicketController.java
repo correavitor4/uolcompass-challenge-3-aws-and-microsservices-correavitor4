@@ -195,4 +195,9 @@ public class TicketController {
         Page<TicketResponseDTO> response = tickets.map(ticket -> modelMapper.map(ticket, TicketResponseDTO.class));
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/existsByEventId/{eventId}")
+    public ResponseEntity<Boolean> areThereTicketsByEventId(@PathVariable UUID eventId) {
+        return ResponseEntity.ok(ticketService.existsByEventId(eventId));
+    }
 }

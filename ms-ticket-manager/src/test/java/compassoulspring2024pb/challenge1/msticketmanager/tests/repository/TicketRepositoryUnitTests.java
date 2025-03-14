@@ -11,8 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -183,5 +186,63 @@ public class TicketRepositoryUnitTests {
 
         // Assert
         assertNull(foundTicket);
+    }
+
+    @Test
+    public void existsByEventId_withValidEventIdAndOneTicket_shouldReturnTrue() {
+        // Arrange
+        UUID eventId = UUID.randomUUID();
+        Ticket ticket = getTicketListWithProvidedEventId(eventId, 1).get(0);
+
+        ticketRepository.save(ticket);
+
+        // Act
+        boolean result = ticketRepository.existsByEventId(eventId);
+
+        // Assert
+        assertTrue(result);
+    }
+
+    @Test
+    public void existsByEventId_withValidEventIdAndNoTickets_shouldReturnFalse() {
+        // Arrange
+        UUID eventId = UUID.randomUUID();
+
+        // Act
+        boolean result = ticketRepository.existsByEventId(eventId);
+
+        // Assert
+        assertFalse(result);
+    }
+
+    @Test
+    public void existsById_withMultipleTickets_shouldReturnTrue() {
+        // Arrange
+        UUID eventId = UUID.randomUUID();
+        List<Ticket> tickets = getTicketListWithProvidedEventId(eventId, 10);
+
+        ticketRepository.saveAll(tickets);
+
+        // Act
+        boolean result = ticketRepository.existsByEventId(eventId);
+
+        // Assert
+        assertTrue(result);
+    }
+
+    private List<Ticket> getTicketListWithProvidedEventId(UUID eventId, int listSize) {
+        return Stream
+                .iterate(0, i -> i + 1)
+                .limit(listSize)
+                .map(i -> Ticket.builder()
+                        .id(UUID.randomUUID())
+                        .cpf("293.666.570-10")
+                        .customerName("John Doe")
+                        .customerEmail("4k4lG@example.com")
+                        .eventId(eventId)
+                        .totalAmountBRL(BigDecimal.valueOf(100))
+                        .build())
+                .collect(Collectors.toList());
+
     }
 }
