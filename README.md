@@ -13,6 +13,7 @@ O projeto apresenta as seguintes features:
 4. Docker. Tudo aqui está dockerizado e tratarei disso mais à frente
 5. Documentação completa com Swagger
 6. teste unitários e de integração
+7. Integração com ViaCepAPI
 
 
 ## Como acessar os serviços
