@@ -60,3 +60,15 @@ Os resultados serão mais ou menos esses:
 ![img_1.png](img_1.png)
 
 
+## Sobre o Deploy
+Inicialmente, tentei rodar com o Github action, mas descobri que nossa conta da AWS bloqueia isso. Sendo assim, tive que buscar outra ferramenta, e usei o Beanstalk e o CodePipeline da própria AWS
+1. Configurei o Beanstalk para subir uma instância EC2 t2.small (1 vCPU e 2 GB de memória)
+2. Configurei o CodePipeline para iniciar o deploy assim que algo for mergeado na main. Ele sobre a aplicação diretamente para a instânica EC2.
+
+Essa instância EC2 está rodando 3 containers:
+1. Container do serviço Event Manager (porta 8080)
+2. Container do serviço Ticket Manager (porta 8081)
+3. Container do MongoDB
+
+Agora, basta acessar o link da instância EC2 e tudo estar pronto!
+
