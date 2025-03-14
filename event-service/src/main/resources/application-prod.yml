@@ -6,7 +6,7 @@ spring:
       uri: mongodb://admin:admin@mongodb:27017/db_event?authSource=admin
 
 ticket-manager:
-  url: http://localhost:8081
+  url: http://ms-ticket-manager:8081
 
 springdoc:
   api-docs:
