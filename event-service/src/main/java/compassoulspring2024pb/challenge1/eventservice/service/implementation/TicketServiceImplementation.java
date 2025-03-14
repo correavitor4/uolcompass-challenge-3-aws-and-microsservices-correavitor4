@@ -1,5 +1,6 @@
 package compassoulspring2024pb.challenge1.eventservice.service.implementation;
 
+import compassoulspring2024pb.challenge1.eventservice.exception.api.APIInternalServerErrorException;
 import compassoulspring2024pb.challenge1.eventservice.integration.ticketsmaganer.TicketManagerClient;
 import compassoulspring2024pb.challenge1.eventservice.service.definition.TicketService;
 import feign.FeignException;
@@ -17,11 +18,9 @@ public class TicketServiceImplementation implements TicketService {
     @Override
     public boolean hasSoldTickets(UUID eventId) {
         try {
-            ticketManagerClient.getByEventId(eventId);
-            return true;
+            return ticketManagerClient.getByEventId(eventId);
         } catch (FeignException e) {
-            if (e instanceof FeignException.NotFound) return false;
-            else throw new RuntimeException(e);
+            throw new APIInternalServerErrorException(e.getMessage());
         }
     }
 }
