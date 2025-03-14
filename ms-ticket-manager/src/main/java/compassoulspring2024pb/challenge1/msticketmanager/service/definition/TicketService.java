@@ -14,4 +14,6 @@ public interface TicketService {
         Ticket deleteTicket(UUID id) ;
 
         Page<Ticket> findAll(Pageable pageable);
+
+        Boolean areThereTicketsByEventId(UUID eventId);
 }

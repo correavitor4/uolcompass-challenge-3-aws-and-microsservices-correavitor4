@@ -1,6 +1,7 @@
 package compassoulspring2024pb.challenge1.msticketmanager.repository;
 
 import compassoulspring2024pb.challenge1.msticketmanager.model.Ticket;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -19,4 +20,7 @@ public interface TicketRepository extends MongoRepository<Ticket, UUID>
 
     @Query("{'cancelledAt': null}")
     Page<Ticket> findAllActive(Pageable pageable);
+
+    @Query(value = "{'eventId': ?0, 'cancelledAt': null}", exists = true)
+    boolean existsByEventId(@NotNull UUID eventId);
 }

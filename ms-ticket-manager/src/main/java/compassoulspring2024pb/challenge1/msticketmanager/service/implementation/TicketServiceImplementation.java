@@ -65,4 +65,9 @@ public class TicketServiceImplementation implements TicketService {
 
         return ticketRepository.findAllActive(pageable);
     }
+
+    @Override
+    public Boolean areThereTicketsByEventId(UUID eventId) {
+        return ticketRepository.existsByEventId(eventId);
+    }
 }
