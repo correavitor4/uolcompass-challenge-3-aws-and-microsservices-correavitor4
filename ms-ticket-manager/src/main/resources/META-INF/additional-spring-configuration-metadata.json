@@ -4,5 +4,10 @@
       "name": "event-manager.url",
       "type": "java.lang.String",
       "description": "Description for event-manager.url."
-  }
-] }
+    },
+    {
+      "name": "ticket-manager.url",
+      "type": "java.lang.String",
+      "description": "Description for ticket-manager.url."
+    }
+  ] }
