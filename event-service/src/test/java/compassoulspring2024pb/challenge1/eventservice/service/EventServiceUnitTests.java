@@ -1,6 +1,7 @@
-package compassoulspring2024pb.challenge1.eventservice.service.event;
+package compassoulspring2024pb.challenge1.eventservice.service;
 
 import compassoulspring2024pb.challenge1.eventservice.exception.api.EntityNotFoundException;
+import compassoulspring2024pb.challenge1.eventservice.exception.api.EventDeletionException;
 import compassoulspring2024pb.challenge1.eventservice.model.Event;
 import compassoulspring2024pb.challenge1.eventservice.model.enums.StatesEnum;
 import compassoulspring2024pb.challenge1.eventservice.repository.EventRepository;
@@ -25,7 +26,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class EventServiceUnitTests {
@@ -183,6 +184,50 @@ public class EventServiceUnitTests {
             Assertions.assertNotNull(event.getState());
         });
     }
+
+    @Test
+    public void delete_withValidIdAndNoSoldTickets_shouldDeleteEvent() {
+        UUID eventId = UUID.randomUUID();
+        Event event = new Event(
+                "Test Event",
+                "75000-000",
+                Instant.now(),
+                Instant.now().plus(1, ChronoUnit.DAYS),
+                "Test Address",
+                "Test City",
+                "Test District",
+                StatesEnum.AC
+        );
+
+        when(eventRepository.findActiveById(eventId)).thenReturn(Optional.of(event));
+        when(ticketService.hasSoldTickets(any(UUID.class))).thenReturn(false);
+
+        eventService.delete(eventId);
+
+        Assertions.assertNotNull(event.getDeletedAt());
+    }
+
+    @Test
+    public void delete_withValidIdAndSoldTickets_shouldThrowEventDeletionException() {
+        UUID eventId = UUID.randomUUID();
+
+        when(ticketService.hasSoldTickets(any(UUID.class))).thenReturn(true);
+        when(eventRepository.findActiveById(eventId)).thenReturn(Optional.of(mock(Event.class)));
+
+        Assertions.assertThrows(EventDeletionException.class, () -> eventService.delete(eventId));
+
+    }
+
+    @Test
+    public void delete_withInvalidId_shouldThrowEntityNotFoundException() {
+        UUID invalidId = UUID.randomUUID();
+        when(eventRepository.findActiveById(invalidId)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(EntityNotFoundException.class, () -> eventService.delete(invalidId));
+        verify(eventRepository, never()).save(any(Event.class));
+    }
+
+
 
     private static List<Event> getEvents() {
         Event event1 = new Event(

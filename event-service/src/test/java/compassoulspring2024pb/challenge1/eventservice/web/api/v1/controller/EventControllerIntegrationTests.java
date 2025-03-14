@@ -1,6 +1,7 @@
 package compassoulspring2024pb.challenge1.eventservice.web.api.v1.controller;
 
 import compassoulspring2024pb.challenge1.eventservice.exception.api.message.ErrorMessage;
+import compassoulspring2024pb.challenge1.eventservice.integration.ticketsmaganer.TicketManagerClient;
 import compassoulspring2024pb.challenge1.eventservice.model.Event;
 import compassoulspring2024pb.challenge1.eventservice.model.enums.StatesEnum;
 import compassoulspring2024pb.challenge1.eventservice.repository.EventRepository;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
@@ -22,16 +24,17 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class EventControllerIntegrationTests {
     private final TestRestTemplate restTemplate = new TestRestTemplate();
+
+    @MockBean
+    private TicketManagerClient ticketManagerClient;
 
     @Autowired
     private EventRepository eventRepository;
@@ -270,6 +273,65 @@ public class EventControllerIntegrationTests {
         assertEquals(response.getBody().getPath(), "/api/v1/events/" + event.getId());
         assertEquals(response.getBody().getStatus(), HttpStatus.BAD_REQUEST.value());
         assertEquals("PUT", response.getBody().getMethod());
+    }
+
+    @Test
+    public void delete_withValidIdAndNoSoldTickets_shouldReturn204() {
+        Event event = getEvents().get(0);
+        eventRepository.save(event);
+
+        when(ticketManagerClient.getByEventId(event.getId())).thenReturn(false);
+
+        String baseUrl = "http://localhost:" + port + "/api/v1/events/" + event.getId();
+        ResponseEntity<Void> response = restTemplate.exchange(
+                baseUrl,
+                HttpMethod.DELETE,
+                null,
+                Void.class
+        );
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
+
+    @Test
+    public void delete_withValidIdAndSoldTickets_shouldReturn409() {
+        Event event = getEvents().get(0);
+        eventRepository.save(event);
+
+        when(ticketManagerClient.getByEventId(event.getId())).thenReturn(true);
+
+        String baseUrl = "http://localhost:" + port + "/api/v1/events/" + event.getId();
+        ResponseEntity<ErrorMessage> response = restTemplate.exchange(
+                baseUrl,
+                HttpMethod.DELETE,
+                null,
+                ErrorMessage.class
+        );
+
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(response.getBody().getPath(), "/api/v1/events/" + event.getId());
+        assertEquals(response.getBody().getStatus(), HttpStatus.CONFLICT.value());
+        assertEquals("DELETE", response.getBody().getMethod());
+    }
+
+    @Test
+    public void delete_withInvalidId_shouldReturn404() {
+        UUID id = UUID.randomUUID();
+
+        String baseUrl = "http://localhost:" + port + "/api/v1/events/" + id;
+        ResponseEntity<ErrorMessage> response = restTemplate.exchange(
+                baseUrl,
+                HttpMethod.DELETE,
+                null,
+                ErrorMessage.class
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(response.getBody().getPath(), "/api/v1/events/" + id);
+        assertEquals(response.getBody().getStatus(), HttpStatus.NOT_FOUND.value());
+        assertEquals("DELETE", response.getBody().getMethod());
     }
 
     private List<Event> getEvents() {

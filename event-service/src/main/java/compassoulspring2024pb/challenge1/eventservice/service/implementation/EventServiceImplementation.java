@@ -76,9 +76,10 @@ public class EventServiceImplementation implements EventService {
 
     @Override
     public void delete(UUID id) {
+        Event event = findById(id);
+
         if(ticketService.hasSoldTickets(id)) throw new EventDeletionException("Cannot delete event with sold tickets");
 
-        Event event = findById(id);
         event.setAsDeleted();
         eventRepository.save(event);
     }
