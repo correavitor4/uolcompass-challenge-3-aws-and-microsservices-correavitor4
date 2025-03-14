@@ -1,4 +1,4 @@
-package compassoulspring2024pb.challenge1.eventservice.service.event;
+package compassoulspring2024pb.challenge1.eventservice.service;
 
 import compassoulspring2024pb.challenge1.eventservice.exception.api.APIInternalServerErrorException;
 import compassoulspring2024pb.challenge1.eventservice.exception.via_cep_api.ViaCepAPICepNotFoundException;
