@@ -1,6 +1,7 @@
 package compassoulspring2024pb.challenge1.eventservice.exception.api.handler;
 
 import compassoulspring2024pb.challenge1.eventservice.exception.api.EntityNotFoundException;
+import compassoulspring2024pb.challenge1.eventservice.exception.api.EventDeletionException;
 import compassoulspring2024pb.challenge1.eventservice.exception.api.message.ErrorMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +39,19 @@ public class APIExceptionHandler {
                 .status(status)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorMessage(request, status, "Error validating request", exception.getBindingResult()));
+    }
+
+    @ExceptionHandler(EventDeletionException.class)
+    public ResponseEntity<ErrorMessage> handleEventDeletionException(EventDeletionException exception,
+                                                                      HttpServletRequest request) {
+        printAPIError(exception.getMessage());
+
+        HttpStatus ht = HttpStatus.CONFLICT;
+
+        return ResponseEntity
+                .status(ht)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, ht, exception.getMessage()));
     }
 
     private void printAPIError(String message) {
