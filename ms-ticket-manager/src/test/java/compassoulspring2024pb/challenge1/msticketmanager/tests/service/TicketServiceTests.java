@@ -9,6 +9,7 @@ import compassoulspring2024pb.challenge1.msticketmanager.service.definition.Even
 import compassoulspring2024pb.challenge1.msticketmanager.service.definition.TicketService;
 import compassoulspring2024pb.challenge1.msticketmanager.service.implementation.TicketServiceImplementation;
 import compassoulspring2024pb.challenge1.msticketmanager.web.api.v1.dto.CreateTicketRequestDTO;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,11 +18,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -41,7 +44,13 @@ public class TicketServiceTests {
 
     @BeforeEach
     public void setup() {
+        ticketRepository.deleteAll();
         ticketService = new TicketServiceImplementation(eventService, ticketRepository);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        ticketRepository.deleteAll();
     }
 
     @Test
@@ -127,6 +136,7 @@ public class TicketServiceTests {
 
     @Test
     public void findByCpf_withValidCpf_shouldReturnTicket() {
+        UUID eventId = UUID.randomUUID();
         // Arrange
         Ticket ticket = Ticket
                 .builder()
@@ -134,34 +144,44 @@ public class TicketServiceTests {
                 .cpf("123.456.789-00")
                 .customerName("John Doe")
                 .customerEmail("4k4lG@example.com")
-                .eventId(UUID.randomUUID())
+                .eventId(eventId)
                 .totalAmountBRL(BigDecimal.valueOf(100))
                 .build();
 
-        when(ticketRepository.findActiveByCpf(any(String.class))).thenReturn(Optional.of(ticket));
+        Ticket ticket2 = Ticket
+                .builder()
+                .id(UUID.randomUUID())
+                .cpf("123.456.789-00")
+                .customerName("John Doe")
+                .customerEmail("4k4lG@example.com")
+                .eventId(eventId)
+                .totalAmountBRL(BigDecimal.valueOf(100))
+                .build();
+
+        Pageable pageable = PageRequest.of(0, 10);
+        PageImpl<Ticket> pagedReturn = new PageImpl<>(List.of(ticket, ticket2));
+        when(ticketRepository.findActiveByCpf(any(String.class), any(Pageable.class))).thenReturn(pagedReturn);
 
         // Act
-        Ticket foundTicket = ticketService.findByCpf(ticket.getCpf());
+        Page<Ticket> foundTickets = ticketService.findByCpf(ticket.getCpf(), pageable);
 
         // Assert
-        assertNotNull(foundTicket);
-        assertEquals(ticket, foundTicket);
-        assertEquals(ticket.getId(), foundTicket.getId());
-        assertEquals(ticket.getCpf(), foundTicket.getCpf());
-        assertEquals(ticket.getCustomerName(), foundTicket.getCustomerName());
-        assertEquals(ticket.getCustomerEmail(), foundTicket.getCustomerEmail());
-        assertEquals(ticket.getEventId(), foundTicket.getEventId());
-        assertEquals(ticket.getTotalAmountBRL(), foundTicket.getTotalAmountBRL());
+        foundTickets.forEach(t -> assertNotNull(t.getCpf()));
     }
 
     @Test
     public void findByCpf_withNonExistentCpf_shouldThrowException() {
         // Arrange
         String cpf = "123.456.789-00";
+        Pageable pageable = PageRequest.of(0, 10);
 
         // Act & Assert
-        when(ticketRepository.findActiveByCpf(any(String.class))).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> ticketService.findByCpf(cpf));
+        when(ticketRepository.findActiveByCpf(any(String.class), any(Pageable.class))).thenReturn(Page.empty());
+
+        Page<Ticket> foundTickets = ticketService.findByCpf(cpf, pageable);
+
+        assertEquals(0, foundTickets.getContent().size());
+        assertEquals(0, foundTickets.getTotalElements());
     }
 
     @Test

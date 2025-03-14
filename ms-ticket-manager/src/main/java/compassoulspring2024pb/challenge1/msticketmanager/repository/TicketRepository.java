@@ -16,7 +16,7 @@ public interface TicketRepository extends MongoRepository<Ticket, UUID>
     Optional<Ticket> findActiveById(UUID id);
 
     @Query("{'cancelledAt': null ,'cpf': ?0}")
-    Optional<Ticket> findActiveByCpf(String cpf);
+    Page<Ticket> findActiveByCpf(String cpf, Pageable pageable);
 
     @Query("{'cancelledAt': null}")
     Page<Ticket> findAllActive(Pageable pageable);

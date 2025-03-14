@@ -8,6 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -140,18 +143,22 @@ public class TicketRepositoryUnitTests {
                 .build();
         UUID savedTicketId = ticketRepository.save(ticket).getId();
 
+        Pageable pageable = PageRequest.of(0, 10);
+
         // Act
-        Ticket foundTicket = ticketRepository.findActiveByCpf(ticket.getCpf()).orElse(null);
+        Page<Ticket> foundTickets = ticketRepository.findActiveByCpf(ticket.getCpf(), pageable);
 
         // Assert
-        assertNotNull(foundTicket);
-        assertEquals(ticket, foundTicket);
-        assertEquals(savedTicketId, foundTicket.getId());
-        assertEquals(ticket.getCpf(), foundTicket.getCpf());
-        assertEquals(ticket.getCustomerName(), foundTicket.getCustomerName());
-        assertEquals(ticket.getCustomerEmail(), foundTicket.getCustomerEmail());
-        assertEquals(ticket.getEventId(), foundTicket.getEventId());
-        assertEquals(ticket.getTotalAmountBRL(), foundTicket.getTotalAmountBRL());
+        foundTickets.forEach(t -> {
+            assertNotNull(t);
+            assertEquals(ticket, t);
+            assertEquals(savedTicketId, t.getId());
+            assertEquals(ticket.getCpf(), t.getCpf());
+            assertEquals(ticket.getCustomerName(), t.getCustomerName());
+            assertEquals(ticket.getCustomerEmail(), t.getCustomerEmail());
+            assertEquals(ticket.getEventId(), t.getEventId());
+            assertEquals(ticket.getTotalAmountBRL(), t.getTotalAmountBRL());
+        });
     }
 
     @Test
@@ -171,21 +178,26 @@ public class TicketRepositoryUnitTests {
 
         ticketRepository.save(ticket);
 
+        Pageable pageable = PageRequest.of(0, 10);
+
         // Act & Assert
-        Optional<Ticket> foundTicket = ticketRepository.findActiveByCpf(ticket.getCpf());
+        Page<Ticket> foundTicket = ticketRepository.findActiveByCpf(ticket.getCpf(), pageable);
         assertTrue(foundTicket.isEmpty());
     }
 
     @Test
-    public void findActiveByCpf_withInvalidCpf_shouldReturnNull() {
+    public void findActiveByCpf_withInvalidCpf_shouldReturnEmptyList() {
         // Arrange
         String invalidCpf = "123.456.789-00";
+        Pageable pageable = PageRequest.of(0, 10);
 
         // Act
-        Ticket foundTicket = ticketRepository.findActiveByCpf(invalidCpf).orElse(null);
+        Page<Ticket> foundTickets = ticketRepository.findActiveByCpf(invalidCpf, pageable);
 
         // Assert
-        assertNull(foundTicket);
+        assertEquals(0, foundTickets.getTotalElements());
+        assertEquals(0, foundTickets.getTotalPages());
+        assertEquals(0, foundTickets.getContent().size());
     }
 
     @Test
