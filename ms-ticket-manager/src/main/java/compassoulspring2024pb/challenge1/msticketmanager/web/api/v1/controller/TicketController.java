@@ -198,6 +198,6 @@ public class TicketController {
 
     @GetMapping("/existsByEventId/{eventId}")
     public ResponseEntity<Boolean> areThereTicketsByEventId(@PathVariable UUID eventId) {
-        return ResponseEntity.ok(ticketService.areThereTicketsByEventId(eventId));
+        return ResponseEntity.ok(ticketService.existsByEventId(eventId));
     }
 }

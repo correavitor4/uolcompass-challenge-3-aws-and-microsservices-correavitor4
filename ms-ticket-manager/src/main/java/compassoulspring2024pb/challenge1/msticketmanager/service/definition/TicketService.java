@@ -15,5 +15,5 @@ public interface TicketService {
 
         Page<Ticket> findAll(Pageable pageable);
 
-        Boolean areThereTicketsByEventId(UUID eventId);
+        Boolean existsByEventId(UUID eventId);
 }

@@ -67,7 +67,7 @@ public class TicketServiceImplementation implements TicketService {
     }
 
     @Override
-    public Boolean areThereTicketsByEventId(UUID eventId) {
+    public Boolean existsByEventId(UUID eventId) {
         return ticketRepository.existsByEventId(eventId);
     }
 }

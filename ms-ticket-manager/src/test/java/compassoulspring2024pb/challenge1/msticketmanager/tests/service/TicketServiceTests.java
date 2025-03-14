@@ -206,4 +206,29 @@ public class TicketServiceTests {
         // Assert
         assertEquals(ticketsPage, result);
     }
+
+    @Test
+    public void existsByEventId_withValidEventIdAndNoTickets_shouldReturnFalse() {
+        // Arrange
+        UUID eventId = UUID.randomUUID();
+
+        // Act
+        boolean result = ticketService.existsByEventId(eventId);
+
+        // Assert
+        assertFalse(result);
+    }
+
+    @Test
+    public void existsByEventId_withValidEventIdAndOneTicket_shouldReturnTrue() {
+        // Arrange
+        UUID eventId = UUID.randomUUID();
+        when(ticketRepository.existsByEventId(eventId)).thenReturn(true);
+
+        // Act
+        boolean result = ticketService.existsByEventId(eventId);
+
+        // Assert
+        assertTrue(result);
+    }
 }
