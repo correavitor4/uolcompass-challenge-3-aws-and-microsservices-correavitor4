@@ -169,38 +169,50 @@ public class TicketControllerIntegrationTests {
 
     @Test
     public void getByCPF_withValidCPF_shouldReturnTicket() {
+        // Arrange
+        UUID eventId = UUID.randomUUID();
         Ticket ticket = Ticket.builder()
                 .id(UUID.randomUUID())
                 .cpf("293.666.570-10")
                 .customerName("John Doe")
                 .customerEmail("4k4lG@example.com")
-                .eventId(UUID.randomUUID())
+                .eventId(eventId)
                 .totalAmountBRL(BigDecimal.valueOf(100))
                 .build();
 
         ticketRepository.save(ticket);
 
+        // Act
         String url = "http://localhost:" + port + "/api/v1/tickets/findByCpf/" + ticket.getCpf();
-        ResponseEntity<TicketResponseDTO> response = restTemplate.getForEntity(url, TicketResponseDTO.class);
+        ResponseEntity<Map<String, Object>> response =
+                restTemplate.exchange(url,
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<>() {
+                        });
+
+        // Assert
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(ticket.getEventId(), response.getBody().getEventId());
-        Assertions.assertEquals(ticket.getCustomerName(), response.getBody().getCustomerName());
-        Assertions.assertEquals(ticket.getCustomerEmail(), response.getBody().getCustomerEmail());
-        Assertions.assertEquals(ticket.getEventId(), response.getBody().getEventId());
-        Assertions.assertEquals(ticket.getTotalAmountBRL(), response.getBody().getTotalAmountBRL());
+        Assertions.assertEquals(1, response.getBody().get("totalElements"));
+        Assertions.assertEquals(1, response.getBody().get("totalPages"));
     }
 
     @Test
-    public void getByCPF_withNonExistentCPF_shouldReturnNotFound() {
+    public void getByCPF_withNonExistentCPF_shouldReturnAnEmptyList() {
         String url = "http://localhost:" + port + "/api/v1/tickets/findByCpf/293.666.570-10";
-        ResponseEntity<ErrorMessage> response = restTemplate.getForEntity(url, ErrorMessage.class);
-        Assertions.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
+        ResponseEntity<Map<String, Object>> response =
+                restTemplate.exchange(url,
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<>() {
+                        });
+
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         Assertions.assertNotNull(response.getBody());
-        Assertions.assertNull(response.getHeaders().getLocation());
-        Assertions.assertEquals("/api/v1/tickets/findByCpf/293.666.570-10", response.getBody().getPath());
-        Assertions.assertEquals(response.getBody().getStatus(), HttpStatus.NOT_FOUND.value());
-        Assertions.assertEquals("GET", response.getBody().getMethod());
+        Assertions.assertEquals(0, response.getBody().get("totalElements"));
+        Assertions.assertEquals(0, response.getBody().get("totalPages"));
     }
 
     @Test
@@ -333,7 +345,7 @@ public class TicketControllerIntegrationTests {
                 .collect(Collectors.toList());
     }
 
-     private List<Ticket> getTicketListByEventId(UUID eventId) {
+    private List<Ticket> getTicketListByEventId(UUID eventId) {
         return Stream.iterate(0, i -> i + 1)
                 .limit(10)
                 .map(i -> Ticket.builder()

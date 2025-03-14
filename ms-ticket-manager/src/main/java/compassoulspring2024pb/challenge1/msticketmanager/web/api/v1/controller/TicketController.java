@@ -149,12 +149,12 @@ public class TicketController {
             }
     )
     @GetMapping("/findByCpf/{cpf}")
-    public ResponseEntity<TicketResponseDTO> findByCpf(@PathVariable String cpf) {
+    public ResponseEntity<Page<TicketResponseDTO>> findByCpf(@PathVariable String cpf, Pageable pageable) {
 
 
-        Ticket ticket = ticketService.findByCpf(cpf);
+        Page<Ticket> tickets = ticketService.findByCpf(cpf, pageable);
 
-        TicketResponseDTO response = modelMapper.map(ticket, TicketResponseDTO.class);
+        Page<TicketResponseDTO> response = tickets.map(ticket -> modelMapper.map(ticket, TicketResponseDTO.class));
         return ResponseEntity.ok(response);
     }
 

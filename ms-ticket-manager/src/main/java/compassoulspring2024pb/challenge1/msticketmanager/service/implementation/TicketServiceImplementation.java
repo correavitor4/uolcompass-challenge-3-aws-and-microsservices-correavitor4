@@ -43,11 +43,9 @@ public class TicketServiceImplementation implements TicketService {
     }
 
     @Override
-    public Ticket findByCpf(String cpf) {
+    public Page<Ticket> findByCpf(String cpf, Pageable pageable) {
         return ticketRepository
-                .findActiveByCpf(cpf)
-                .orElseThrow(() -> new EntityNotFoundException("Ticket with cpf " + cpf + " not found"));
-
+                .findActiveByCpf(cpf, pageable);
     }
 
     @Override

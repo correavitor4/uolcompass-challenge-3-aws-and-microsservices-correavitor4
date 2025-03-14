@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface TicketService {
         Ticket createTicket(CreateTicketRequestDTO dto) ;
         Ticket findById(UUID id) ;
-        Ticket findByCpf(String cpf) ;
+        Page<Ticket> findByCpf(String cpf, Pageable pageable) ;
         void deleteTicket(UUID id) ;
 
         Page<Ticket> findAll(Pageable pageable);
