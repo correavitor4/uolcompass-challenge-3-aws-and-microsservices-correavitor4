@@ -3,7 +3,7 @@ spring:
     name: event-manager
   data:
     mongodb:
-      uri: mongodb://admin:admin@localhost:27017/db_event?authSource=admin
+      uri: mongodb://admin:admin@mongodb:27017/db_event?authSource=admin
 
 ticket-manager:
   url: http://localhost:8081
