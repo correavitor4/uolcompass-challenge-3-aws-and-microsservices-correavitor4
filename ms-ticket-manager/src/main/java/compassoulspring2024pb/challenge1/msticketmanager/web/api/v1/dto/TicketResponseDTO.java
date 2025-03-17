@@ -16,6 +16,7 @@ public class TicketResponseDTO {
 
     private Instant createdAt = Instant.now();
 
+
     @NotBlank
     private String cpf;
 
